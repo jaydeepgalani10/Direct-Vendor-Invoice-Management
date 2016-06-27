@@ -1,0 +1,55 @@
+method PAY_TERM_CALC.
+
+DATA : DAYS TYPE VTBBEWE-ATAGE,
+       V_MAT_PRICE TYPE ZJA_MATERIALS-MAT_PRICE.
+
+  IF ( INV_CDATE <> '00000000' ) AND ( MAT_RDATE <> '00000000' ).
+
+ CALL FUNCTION 'FIMA_DAYS_AND_MONTHS_AND_YEARS'
+   EXPORTING
+     I_DATE_FROM          = INV_CDATE
+*    I_KEY_DAY_FROM       =
+     I_DATE_TO            = MAT_RDATE
+*    I_KEY_DAY_TO         =
+*    I_FLG_SEPARATE       = ' '
+  IMPORTING
+     E_DAYS               = DAYS
+*    E_MONTHS             =
+*    E_YEARS              =
+           .
+
+  ENDIF.
+
+  IF MAT_ID IS NOT INITIAL.
+   SELECT SINGLE MAT_PRICE FROM ZJA_MATERIALS INTO V_MAT_PRICE WHERE MAT_ID = MAT_ID.
+  ENDIF.
+
+  NET_AMT = QNTY * V_MAT_PRICE.
+
+  IF PAY_TERM = 'PT15'.
+    IF DAYS > 15 AND NET_AMT <> ''.
+     DED_AMT = ( 2 / 100 ) * NET_AMT.
+     NET_AMT = NET_AMT - DED_AMT.
+     ENDIF.
+
+   ELSEIF PAY_TERM = 'PT30'.
+     IF DAYS > 30 AND NET_AMT <> ''.
+     DED_AMT = ( 2 / 100 ) * NET_AMT.
+     NET_AMT = NET_AMT - DED_AMT.
+     ENDIF.
+
+   ELSEIF PAY_TERM = 'PT45'.
+     IF DAYS > 45 AND NET_AMT <> ''.
+     DED_AMT = ( 3 / 100 ) * NET_AMT.
+     NET_AMT = NET_AMT - DED_AMT.
+     ENDIF.
+
+   ELSEIF PAY_TERM = 'PT60'.
+     IF DAYS > 60 AND NET_AMT <> ''.
+     DED_AMT = ( 3 / 100 ) * NET_AMT.
+     NET_AMT = NET_AMT - DED_AMT.
+     ENDIF.
+
+  ENDIF.
+
+endmethod.
