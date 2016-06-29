@@ -15,4 +15,4 @@
 10. Implementation of General Invoice report based on the Invoice Status(Park, Post, Reverse).
 
 ##Following is the project youtube video link: 
-https://www.youtube.com/watch?v=7v1anrHaM14&feature=youtu.be
+https://youtu.be/3HB7HtGS2RA
